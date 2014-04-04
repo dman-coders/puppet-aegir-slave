@@ -19,3 +19,10 @@ to connect.
 
 To use another ssh client, the user:pass is vagrant:vagrant
 
+# Diagnostics etc.
+
+To re-apply the full set of puppet scripts, ssh in and:
+
+    sudo puppet apply /vagrant/manifests/site.pp
+
+
