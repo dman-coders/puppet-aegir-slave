@@ -21,6 +21,10 @@ To use another ssh client, the user:pass is vagrant:vagrant
 
 # Diagnostics etc.
 
+The puppet client should already be on the system.
+
+It installs local things at /etc/puppet.
+
 To re-apply the full set of puppet scripts, ssh in and:
 
     sudo puppet apply /vagrant/manifests/site.pp
