@@ -47,3 +47,10 @@ More docs that took ages to unpack. To add a module directly on the guest:
     puppet module --modulepath /vagrant/modules install puppetlabs-stdlib
 
 
+# Intallation dependencies
+
+Using the puppetlabs Apache module requires
+'puppetlabs/stdlib'
+'puppetlabs/concat'
+
+
