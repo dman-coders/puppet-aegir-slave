@@ -5,6 +5,6 @@
 node default {
   # Use a local proxy with apt, and run update.
   import "apt-setup"
-
-  include apache
+  # Set up a server to start listening.
+  import "apache-setup"
 }
