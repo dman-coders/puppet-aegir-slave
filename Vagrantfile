@@ -7,11 +7,9 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "precise64"
-
-  # The url from where the 'config.vm.box' box will be fetched if it
-  # doesn't already exist on the user's system.
-  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
+  # The location of this one will be autodetected, served from a vagrant repo
+  # and can be updated automatically.
+  config.vm.box = "hashicorp/precise64"
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
@@ -34,21 +32,26 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provider "virtualbox" do |vb|0
     # Don't boot with headless mode
-    vb.gui = true
+    # vb.gui = true
     vb.customize ["modifyvm", :id, "--cpus", "2"]
     vb.customize ["modifyvm", :id, "--memory", "1024"]
   end
 
   # Enable provisioning with Puppet stand alone.  Puppet manifests
   # are contained in a directory path relative to this Vagrantfile.
-  # You will need to create the manifests directory and a manifest in
-  # the file base.pp in the manifests_path directory.
-
   config.vm.provision "puppet" do |puppet|
+
     # puppet.manifests_path = "manifests"
     # puppet.manifest_file  = "default.pp"
-    puppet.module_path = "modules"
-  end
+    # When designing for puppetmaster, the base manifest may be site.pp
+    # and many docs refer to that instead of 'default.
 
+    puppet.module_path = "modules"
+
+    # The docs at http://friendsofvagrant.github.io/v1/docs/provisioners/puppet.html
+    # were unclear to a ruby-noob, but this is how to pass additional options.
+    puppet.options = "--verbose --debug"
+
+  end
 
 end
