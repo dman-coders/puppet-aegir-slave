@@ -37,6 +37,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["modifyvm", :id, "--memory", "1024"]
   end
 
+  # Puppet versions are out of control. Attempt to use the latest from puppetlabs.
+  config.vm.provision :shell, :path => "files/upgrade_puppet.sh"
+
   # Enable provisioning with Puppet stand alone.  Puppet manifests
   # are contained in a directory path relative to this Vagrantfile.
   config.vm.provision "puppet" do |puppet|
@@ -50,7 +53,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     # The docs at http://friendsofvagrant.github.io/v1/docs/provisioners/puppet.html
     # were unclear to a ruby-noob, but this is how to pass additional options.
-    puppet.options = "--verbose --debug"
+    # puppet.options = "--verbose --debug"
+    puppet.options = "--verbose"
 
   end
 
