@@ -1,4 +1,4 @@
-notice("Setting up Apache")
+notice("Setting up Apache with minimal additions.")
 
 # Using the module distributed by puppetlabs.
 # https://github.com/puppetlabs/puppetlabs-apache#usage
@@ -6,14 +6,16 @@ notice("Setting up Apache")
 class { 'apache':
   # If I wanted settings for apache, set them here.
   #default_mods        => false,
-  default_confd_files => false,
+  #default_confd_files => false,
 }
+
+apache::mod { 'rewrite': }
+
 #apache::vhost { 'first.example.com':
 #  port    => '80',
 #  docroot => '/var/www/first',
 #}
 
-notice("Including Apache")
 include "apache"
 
 # The default setup under Vagrant sets the apache server up with port forwarding
