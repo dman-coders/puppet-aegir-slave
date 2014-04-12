@@ -2,6 +2,20 @@
 
 Built from scratch because all the examples I found had too much stuff that I didn't understand yet.
 
+## Warning
+
+This probably won't work for anyone but me - it was built on a local Virtualbox
+and it's hard-coded to use a local apt-cacher I keep on another VM.
+Because it takes 40 minutes to provision from scratch each time if I try to do
+a dist-upgrade at home otherwise.
+
+I found that almost no online help docs worked, as the versions of Puppet have
+changed so much in the last 2 years it's impossible to find what best-practice,
+or even 'supported' methodology is.
+
+Seriously, do not expect this to work or to learn anything off it. It's only
+in git so I can experiment with puppetmaster provisioning etc.
+
 # Usage
 
 Run
@@ -52,10 +66,25 @@ More docs that took ages to unpack. To add a module directly on the guest:
 
 # Intallation dependencies
 
-Using the puppetlabs Apache module requires
+Seeing as I thought the entire purpose of using puppet was *not* to re-invent
+the wheel and just be able to say "I need Apache and PHP with mem_limit of 256"
+I'm trying REALLY hard to re-use and import existing module manifests.
+But most of the ones I find are horrible.
+All the interesting tutorials teach us to go ahead and make our own thing,
+and are full of individual file edits and shell calls,
+or have exploded into dozens of enterprise-level dependency-hells.
+What am I to do?
+
+So I'm using git submodules to pull in a small handfull of what look like sane
+lliraries from puppetlabs.
+I get puppet modules for apt, apache and mysql from there.
+Could not find one for PHP
+
+Using the puppetlabs modules also requires
 'puppetlabs/stdlib'
 'puppetlabs/concat'
 
+I'm still having trouble with the execution order for apt.
 
 # More
 
