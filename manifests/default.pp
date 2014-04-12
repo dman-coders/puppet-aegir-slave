@@ -15,7 +15,6 @@ file { '/etc/motd':
 }
 
 # If I don't have the pupptulabs libraries, pain.
-
 # to prevent "Invalid resource type module_dir"
 
 include "stdlib"

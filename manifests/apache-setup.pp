@@ -1,4 +1,4 @@
-notice("Setting up Apache with minimal additions.")
+notice("We will want Apache with minimal additions.")
 
 # Using the module distributed by puppetlabs.
 # https://github.com/puppetlabs/puppetlabs-apache#usage
@@ -16,7 +16,6 @@ apache::mod { 'rewrite': }
 #  docroot => '/var/www/first',
 #}
 
-include "apache"
 
 # The default setup under Vagrant sets the apache server up with port forwarding
 # such that the website is on http://localhost:8080

@@ -1,3 +1,4 @@
+notice("We will want PHP")
 
 class php {
   notice("Setting up PHP with preferred settings and extensions")
@@ -30,4 +31,5 @@ class php {
 
 }
 
+# Now run it.
 include php
