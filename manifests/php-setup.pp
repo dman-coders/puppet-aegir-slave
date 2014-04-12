@@ -1,6 +1,7 @@
-notice("Setting up PHP with preferred settings and extensions")
 
-class php-setup {
+class php {
+  notice("Setting up PHP with preferred settings and extensions")
+
   import "apt-setup"
 
   notice(" - Checking PHP extensions")
@@ -29,4 +30,4 @@ class php-setup {
 
 }
 
-include php-setup
+include php

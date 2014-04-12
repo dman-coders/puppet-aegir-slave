@@ -46,6 +46,9 @@ More docs that took ages to unpack. To add a module directly on the guest:
 
     puppet module --modulepath /vagrant/modules install puppetlabs-stdlib
 
+.. fails in 2.7.11
+
+
 
 # Intallation dependencies
 
@@ -54,3 +57,21 @@ Using the puppetlabs Apache module requires
 'puppetlabs/concat'
 
 
+# More
+
+This was pulled together by referring to multiple sources.
+I still can't figure out why every example seems to create its own full
+libraries of Puppet class files and manifests - isn't the point to re-use
+the common setup requirements and make them overridable as needed
+- not to rewrite them every time?
+
+https://puphpet.com/
+Gave me some hints, but the auto-generated code was so riddled with
+OS-related if-thens that it was hard to read.
+
+https://github.com/mikkeschiren/vagrant-example
+Looks clearer, but despite seeming simple on the top where it just listed the
+included modules by name, it also distributes the full source code of those
+handmade modules. Where is the re-use?
+
+Variations of aegir-up kept their code in funny places

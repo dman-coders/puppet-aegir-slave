@@ -15,7 +15,8 @@ then
 fi
 
 # Only run the apt update if it looks out of date - like a new repo has been added.
-if [ ` /usr/bin/find /etc/apt/* -cnewer /var/cache/apt/pkgcache.bin ` ]; then
+# This is such a crappy hacky check ... stolen from stackoverflow.
+if [ ! -f /var/cache/apt/pkgcache.bin ] || ` /usr/bin/find /etc/apt/* -cnewer /var/cache/apt/pkgcache.bin | /bin/grep . > /dev/null ` ; then
   sudo apt-get update
   sudo apt-get autoremove
 fi

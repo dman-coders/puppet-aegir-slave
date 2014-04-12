@@ -27,6 +27,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
 
+  # This requires vbox additions to be added, so forget it.
+  #config.vm.synced_folder "manifests", "/etc/puppet/manifests"
+  #config.vm.synced_folder "modules", "/etc/puppet/modules"
+
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
 

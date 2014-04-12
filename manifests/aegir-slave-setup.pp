@@ -1,6 +1,10 @@
 notice("Setting up Aegir daemon account and access")
 
+# Aegir requires a drupal-compatible web server environment.
+import "drupal-setup"
+
 # Starting from http://community.aegirproject.org/node/30
+# http://community.aegirproject.org/node/396
 
 class aegir-slave-setup (
   $puppet_path  = '/vagrant',
@@ -9,6 +13,9 @@ class aegir-slave-setup (
   $web_group    = 'www-data',
   $aegir_gid    = 118,
 ) {
+
+  require 'drupal-setup'
+
 
   # I suspect that transfers will be a bit easier if our gids are consistent.
   # Unknown though.
@@ -24,7 +31,7 @@ class aegir-slave-setup (
     #membership => minimum,
     require => Group[$aegir_user]
   }
-  file { [ $aegir_root, "${aegir_root}/.drush" ]:
+  file { [ $aegir_root, "${aegir_root}/.drush", "${aegir_root}/config" ]:
     ensure  => directory,
     owner   => $aegir_user,
     group   => $aegir_user,
@@ -38,12 +45,18 @@ class aegir-slave-setup (
     group   => $aegir_user,
     require => User[$aegir_user],
   }
-  file { [ "${aegir_root}/.ssh/authorized_keys" ]:
+  file { "${aegir_root}/.ssh/authorized_keys":
     ensure  => file,
     source => "${puppet_path}/files/var/aegir/.ssh/id_rsa.pub",
     owner   => $aegir_user,
     group   => $aegir_user,
     require => User[$aegir_user],
+  }
+  file_line { 'Add shared public key':
+    ensure => 'present',
+    path => "${aegir_root}/.ssh/authorized_keys",
+    #source => "${puppet_path}/files/var/aegir/.ssh/id_rsa.pub",
+    line => 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCtyttm8nnzk8eESJzp0LIzSl9kZ5Amm48Dfjh7ab0c6ioRSXbfXyDmmPTK0240B6/fVRIQ//8+BROn5r06+CLnpJF13TihbroSu4oW0qcR7MlYpu2xM/yRmeQrFzD5xlVJ9Tphq3iiKxJCDuu1WbmNZtkdEw+USrcDrpUtOYv9nJ9lObzS4HsEbSgbn7OP9s4CwP5wMIGpK+iLWE4sr+QZQv33G0yiOvrhwkQhqeo8MdCfGoWGmDcPbfyA1XZaOXoOBH+jqvEfTjGhi2FbKnEMRiJN8YUO/TzP9/Ap/bdI8nFgaF6xlkzVUzJT3ohYL6wyPGvsSIY46jamd7choLWP aegir@puppet-slave-2014',
   }
 
   # This user gets a login to manage the local databases.
@@ -54,6 +67,28 @@ class aegir-slave-setup (
     password => $aegir_user,
     host     => '%',
     grant    => 'all',
+  }
+
+  # Include the Aegir web confs
+  file { "${aegir_root}/config/apache.conf":
+    ensure  => file,
+    source => "${puppet_path}/files/var/aegir/config/apache.conf",
+  }
+  file { '/etc/apache2/conf.d/aegir.conf':
+    ensure => 'link',
+    target => "${aegir_root}/config/apache.conf",
+  }
+
+
+  # Aegir can restart apache
+  #file_line { 'Add sudo to aegur users':
+  #  ensure => 'present',
+  #  path => "/etc/sudoers",
+  #  line => 'aegir ALL=NOPASSWD: /usr/sbin/apache2ctl',
+  #}
+  file { "/etc/sudoers.d/aegir":
+    ensure  => file,
+    source => "${puppet_path}/files/etc/sudoers.d/aegir",
   }
 
 }
