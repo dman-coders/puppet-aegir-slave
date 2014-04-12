@@ -15,10 +15,13 @@ stage { 'preinstall':
 class { 'apt':
   # If I wanted settings for apt, set them here.
   always_apt_update    => false,
-  proxy_host           => '192.168.56.101',
-  proxy_port           => '3142',
-  # Adding that this should be initialized at preinstall
-  # may ensure the proxy is in use before the rest try updating
+  # These settings were neccessary on local virtualbox
+  # but they limit the ability to distribute the box.
+  #  proxy_host           => '192.168.56.101',
+  #  proxy_port           => '3142',
+
+  # Adding that apt stuff should be initialized at preinstall.
+  # May ensure the proxy is in use before the rest try updating.
   stage                => 'preinstall'
 }
 

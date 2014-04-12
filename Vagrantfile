@@ -42,6 +42,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # vb.gui = true
     vb.customize ["modifyvm", :id, "--cpus", "2"]
     vb.customize ["modifyvm", :id, "--memory", "1024"]
+
+    # Set the apt-cacher. This is a per-environment setting.
+    # not part of the box rules really.
+    config.vm.provision :shell, :inline => "echo 'Acquire::http::Proxy \"http://192.168.56.101:3142\";' >  /etc/apt/apt.conf.d/proxy "
+
   end
 
   # Alternatively, do an AWS provisioning.
@@ -74,6 +79,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.box                 = "dummy"
     config.vm.box_url             = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
 
+
   end
 
   # Puppet versions are out of control. Attempt to use the latest from puppetlabs.
@@ -92,8 +98,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     # The docs at http://friendsofvagrant.github.io/v1/docs/provisioners/puppet.html
     # were unclear to a ruby-noob, but this is how to pass additional options.
-    # puppet.options = "--verbose --debug"
     puppet.options = "--verbose"
+
+    # How can I send more, arbitrary info to the puppet context?
 
   end
 
