@@ -13,7 +13,7 @@ class aegir-slave-setup (
   $aegir_user   = 'aegir',
   $aegir_root   = '/var/aegir',
   $web_group    = 'www-data',
-  $aegir_gid    = 118,
+  #$aegir_gid    = 118,
 ) {
 
   notice("Setting up Aegir daemon account and access")
