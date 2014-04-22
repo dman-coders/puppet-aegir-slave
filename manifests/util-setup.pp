@@ -11,6 +11,7 @@ class util-setup {
       "rsync",
       "git-core",
       "unzip",
+      "vim",
     ]:
     ensure => present,
   }
