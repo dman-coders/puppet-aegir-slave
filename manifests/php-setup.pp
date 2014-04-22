@@ -7,15 +7,15 @@ class php {
 
   notice(" - Checking PHP extensions")
   $packages = [
-      "php5-common",
-      "php5-cli",
-      "php5-cgi",
-      "php5",
-      #"php5-curl",
-      "php5-gd",
-      "php5-mysql",
-      "php-pear",
-    ]
+    "php5-common",
+    "php5-cli",
+    "php5-cgi",
+    "php5",
+    "php5-curl",
+    "php5-gd",
+    "php5-mysql",
+    #"php-pear",
+  ]
 
   # For old PHP, and to pin it there, we need an older repo.
   apt::source { 'precise_archive':
@@ -32,11 +32,13 @@ class php {
   # Using a heavy pin does not prevent any other upgrade from dragging this
   # version forward accidentally.
   apt::hold { $packages:
-    version => '5.3.10-1ubuntu3',
-    require => Apt::Source['precise_archive'],
+    # Here it requires the partial version number.
+    version => '5.3.10*',
+    require => [ Apt::Source['precise_archive'] ],
   }
 
   package { $packages:
+    # Here it requires the full version number.
     ensure => '5.3.10-1ubuntu3',
     require => [ Apt::Hold[$packages] ],
   }
@@ -56,3 +58,4 @@ class php {
 
 # Now run it.
 include php
+
