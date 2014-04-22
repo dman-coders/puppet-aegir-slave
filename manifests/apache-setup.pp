@@ -10,6 +10,7 @@ class { 'apache':
 }
 
 apache::mod { 'rewrite': }
+apache::mod { 'php': }
 
 #apache::vhost { 'first.example.com':
 #  port    => '80',
