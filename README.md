@@ -159,28 +159,28 @@ But what about older versions?
 
 And what about downgrading (and holding/pinning)?
 
-The terminology is now 'hold' as 'pin' is mutable and only hints at the version
-we want but does not enforce it of some other thing wants to pull the old
+The terminology is now 'hold'. 'Pin' is mutable and only hints at the version
+we want but _does not enforce it_ if some other thing wants to pull the old
 version up..
 
 
 If I try to use this months new Ubuntu LTS ('trusty')
 and used "ensure present"
-I would get given  5.5.9+dfsg-1ubuntu4
+I would get given  *5.5.9+dfsg-1ubuntu4*
 
-Listing the available versions does not work:
+Listing the available versions does not show me any other choices:
 
     apt-cache madison php5
 
-Not unless additional repos are added.
+... Not unless additional repos are added.
 
 By adding
 
-  deb http://bg.archive.ubuntu.com/ubuntu/ precise main restricted
+    deb http://bg.archive.ubuntu.com/ubuntu/ precise main restricted
 
-We get access to 5.3.10-1ubuntu3
+We get access to *5.3.10-1ubuntu3*
 Then we need to specify the version and also 'hold' the version
-- for all php-related mods.
+for *all* php-related mods.
 
 
 ### Clean-slate to begin
@@ -195,21 +195,26 @@ kill them all
 
 
 But on a new box, that's no big deal.
-Instead, use the puppet-apt tool and hold them.
-This works by giving a higher priority to the older archive version..
-though it does not prevent accidental upgrades.
+Instead, use the puppetlabs-apt tool and 'hold' them.
+https://github.com/puppetlabs/puppetlabs-apt
+
+It turns out that puppetlabs 'hold' is really only a 'pin' :-(
+This works by giving a higher priority to the older archive version when
+installing it specifically, though it does not prevent accidental upgrades.
 
 ### Madness with circular loops
 
 It turns out that specifying a perferred version for one part of php, but not
 for others (like php5-gd) craps out, OR forcibly upgrades the thing you were
 trying to keep back OR produces some combination of the two.
-We need to hold them all at the same time, and this is possible byu putting all
+We need to hold them all at the same time. And this is possible by putting all
 versions and numbers on the same line using apt-get, but NOT when using puppet
 as it installs each package one by one, in no special order.
+(Seriously, it's like it randomizes my lists each run)
 
 To get this all installed at all, we need to 'pin' and define our preferred
-install versions.
+install versions, so that when dependencies are auto-installed, they are the
+*right versions*.
 
 ### Diagnostics
 
@@ -231,7 +236,7 @@ Which produces configs ('pins') in /etc/apt/preferences.d like so:
     Pin: version 5.7.10*
     Pin-Priority: 1001
 
-To find what priorities the competing versions have
+To find what _priorities_ the competing versions have
 
     apt-cache policy php5-cgi
 
@@ -249,6 +254,7 @@ http://carlo17.home.xs4all.nl/howto/debian.html#errata
             500 http://bg.archive.ubuntu.com/ubuntu/ precise/main amd64 Packages
 
 The 1000 there is only a value to match against, not the value found.
+
 We specified that
 "A version 5.3.10 is worth 1000 points, now search for anything that meets or beats that value"
 And that has been correctly identified as the "candidate",
@@ -265,14 +271,16 @@ no matter what the weightings on the repository lists are
 
 * Actually, what lost me the rest of the day was that apt::hold creates
   conf files with spaces in, and SPACES DO NOT WORK.
+  This seems to be an accidental bug.
+  https://tickets.puppetlabs.com/browse/MODULES-727
 
 * If you specify a version that is not available from the current repos,
   it ignores you and takes a guess as if you said nothing.
   Gee thanks.
 
 * If you then install something that is not pinned, and the latest version of
-  that expects the latest version of the rest, the rest will be instantly
-  upgraded to meet the newbies expectations.
+  that expects the latest version of the somnething that *is* pinned,
+  the pinned thing will be instantly upgraded to meet the newbies expectations!
   Instant death, why did we bother.
   Need to also 'hold' it to prevent this from happening.
 
@@ -283,9 +291,11 @@ Doing something innocuous manually now, like
 
     apt-get install php5-ldap
 
-Can destroy all our fun. It will pull everything along to the latest.
+Can destroy all our fun. It will pull everything we intended to hold back
+along to the latest release.
 
-apt::hold (right now) does NOT actually 'hold' (and lock) it.
+Puppetlabs apt::hold (right now) does NOT actually 'hold' (and lock) it,
+despite its name.
 Some excuses for this are in the docs, but the promised solution does not deliver.
 https://github.com/puppetlabs/puppetlabs-apt
 The concept it refers to as
@@ -293,7 +303,7 @@ The concept it refers to as
 http://www.howtoforge.com/a-short-introduction-to-apt-pinning
 does NOT prevent later dependencies from upgrading the parent.
 
-To do that,
+To really do that,
 
     apt-mark hold php5-common
 
@@ -307,8 +317,9 @@ and you need to go:
     apt-get install php5-ldap=5.3.10-1ubuntu3
 
 Note that AFTER locking a package, apt-get will complain and die if you try a
-simple update that would break the lock. But if you use aptitude, it will
-problem-solve for you:
+simple update that would break the lock.
+It doesn't even tell you where the lock is!
+But if you use aptitude, it will problem-solve for you:
 
     $ aptitude install php5-xsl
     The following NEW packages will be installed:
