@@ -18,3 +18,4 @@ class drupal-setup {
 }
 
 include "drupal-setup"
+include "drush"

@@ -13,3 +13,9 @@
 [submodule "modules/mysql"]
 	path = modules/mysql
 	url = https://github.com/puppetlabs/puppetlabs-mysql.git
+[submodule "modules/puppet-drush"]
+	path = modules/puppet-drush
+	url = http://git.drupal.org/project/puppet-drush.git
+[submodule "modules/drush"]
+	path = modules/drush
+	url = http://git.drupal.org/project/puppet-drush.git
