@@ -154,3 +154,27 @@ Though that requres you to know the obscure version number also :
 "5.5.11-2+deb.sury.org~precise+2"
 
 But what about older versions?
+
+And what about downgrading (and holding/pinning)?
+The terminology is now 'hold' as 'pin' is mutable and only hints at the version
+we want but does not enforce it of some other thing wants to pull the old
+version up..
+
+
+If I try to use this months new Ubuntu LTS ('trusty')
+and used "ensure present"
+I would get given  5.5.9+dfsg-1ubuntu4
+
+Listing the available versions does not work:
+
+    apt-cache madison php5
+
+Not unless additional repos are added.
+
+By adding
+
+  deb http://bg.archive.ubuntu.com/ubuntu/ precise main restricted
+
+We get access to 5.3.10-1ubuntu3
+Then we need to specify the version and also 'hold' the version
+- for all php-related mods.
