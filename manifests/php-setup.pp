@@ -7,9 +7,10 @@ class php {
 
   notice(" - Checking PHP extensions")
   $packages = [
-      "php5",
       "php5-common",
       "php5-cli",
+      "php5-cgi",
+      "php5",
       #"php5-curl",
       "php5-gd",
       "php5-mysql",
@@ -24,6 +25,12 @@ class php {
     include_src       => false,
   }
 
+  # apt::hold here really is just a heavy pin.
+  # HOWEVER, it seems that that is not as strong as
+  #   apt-mark hold package_name
+  # which is the real way.
+  # Using a heavy pin does not prevent any other upgrade from dragging this
+  # version forward accidentally.
   apt::hold { $packages:
     version => '5.3.10-1ubuntu3',
     require => Apt::Source['precise_archive'],
