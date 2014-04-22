@@ -31,11 +31,12 @@ class aegir-slave-setup (
   }
   user {$aegir_user:
     ensure => present,
-    system  => true,
+    #system  => true, # correct, but gives you a shitty shell
     gid => $aegir_user,
     groups => [$web_group],
     #membership => minimum,
     require => Group[$aegir_user]
+    home => "/home/$name",
   }
   file { [ $aegir_root, "${aegir_root}/.drush", "${aegir_root}/config" ]:
     ensure  => directory,
@@ -105,8 +106,10 @@ class aegir-slave-setup (
 
 }
 
-require aegir-slave-setup
-# or equvalently:
-#  class { 'aegir-slave-setup' :
-#    $aegir_user   => 'aegir',
-#  }
+#require aegir-slave-setup
+# or equivalently:
+class {'aegir-slave-setup':
+  # I should be able to just use $confdir here. Why does that not work?
+  puppet_path => "/etc/puppet",
+  aegir_user   => 'aegir'
+}
