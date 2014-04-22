@@ -1,8 +1,16 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-require './Vagrantfile.local'
-include AWS_vars
+# Load local settings - these may contain personalized settings such
+# as server keys.
+#
+# A sample Vagrantfile.local.dist.rb lists the expected settings.
+#
+File.exist?('./Vagrantfile.local') do
+ require './Vagrantfile.local'
+ include AWS_vars
+end
+
 
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
@@ -14,29 +22,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # and can be updated automatically.
   config.vm.box = "hashicorp/precise64"
 
-  # Create a forwarded port mapping which allows access to a specific port
-  # within the machine from a port on the host machine. In the example below,
-  # accessing "localhost:8080" will access port 80 on the guest machine.
-  config.vm.network "forwarded_port", guest: 80, host: 8080
+  # Different setups for different providers
 
-  # Create a public network, which generally matched to bridged network.
-  # Bridged networks make the machine appear as another physical device on
-  # your network.
-  # config.vm.network "public_network"
-
-  # Share an additional folder to the guest VM. The first argument is
-  # the path on the host to the actual folder. The second argument is
-  # the path on the guest to mount the folder. And the optional third
-  # argument is a set of non-required options.
-  # config.vm.synced_folder "../data", "/vagrant_data"
-
-  # This requires vbox additions to be added, so forget it.
-  #config.vm.synced_folder "manifests", "/etc/puppet/manifests"
-  #config.vm.synced_folder "modules", "/etc/puppet/modules"
-
-  # Provider-specific configuration so you can fine-tune various
-  # backing providers for Vagrant. These expose provider-specific options.
-
+  # VirtualBox local
+  # ================
   config.vm.provider "virtualbox" do |vb|0
     # Don't boot with headless mode
     # vb.gui = true
@@ -49,7 +38,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   end
 
-  # Alternatively, do an AWS provisioning.
+  # Alternatively, do provisioning on
+  #
+  # Amazon Web Services EC2
+  # =======================
   config.vm.provider "aws" do |aws, override|
 
     # aws.access_key_id     = "SECRET"
@@ -79,10 +71,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.box                 = "dummy"
     config.vm.box_url             = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
 
-
   end
 
-  # Puppet versions are out of control. Attempt to use the latest from puppetlabs.
+  # Puppet versions are out of control and impossible to follow.
+  # Attempt to use the latest from puppetlabs.
   config.vm.provision :shell, :path => "files/upgrade_puppet.sh"
 
   # Enable provisioning with Puppet stand alone.  Puppet manifests
@@ -99,8 +91,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # The docs at http://friendsofvagrant.github.io/v1/docs/provisioners/puppet.html
     # were unclear to a ruby-noob, but this is how to pass additional options.
     puppet.options = "--verbose"
-
-    # How can I send more, arbitrary info to the puppet context?
 
   end
 
