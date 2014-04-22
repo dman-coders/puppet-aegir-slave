@@ -130,3 +130,27 @@ The first one does NOT instantiate the class, and requires you to
 
 The second one DOES instantiate it immediately!
 http://garylarizza.com/blog/2011/03/11/using-run-stages-with-puppet/
+
+## apt versions
+
+If we use only the Ubuntu stable repositories, we have very little choice as
+to the available versions.
+On 'precise', PHP is locked to "5.3.10-1ubuntu3.11".
+Note that the full string is required as the version. Though "5.3.10-1ubuntu3"
+also works.
+
+We can tell the package manager to
+
+    package { "php5":
+      ensure => "5.3.10-1ubuntu3.11",
+    }
+
+And that will work, but no other number will.
+For other versions, we will need to add a different repo.
+
+Adding a private repo where newer versions of PHP can be got is helpful.
+http://www.jeffmould.com/2013/10/06/upgrading-from-php-5-3-to-5-x-on-ubuntu-12-04/
+Though that requres you to know the obscure version number also :
+"5.5.11-2+deb.sury.org~precise+2"
+
+But what about older versions?
