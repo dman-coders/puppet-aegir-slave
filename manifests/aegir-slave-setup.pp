@@ -34,9 +34,9 @@ class aegir-slave-setup (
     #system  => true, # correct, but gives you a shitty shell
     gid => $aegir_user,
     groups => [$web_group],
-    #membership => minimum,
-    require => Group[$aegir_user]
     home => "/home/$name",
+    #membership => minimum,
+    require => Group[$aegir_user],
   }
   file { [ $aegir_root, "${aegir_root}/.drush", "${aegir_root}/config" ]:
     ensure  => directory,
@@ -88,6 +88,15 @@ class aegir-slave-setup (
     target => "${aegir_root}/config/apache.conf",
     require => [
       File["${aegir_root}/config"],
+    ]
+  }
+  # Aegir owns the web stuff.
+  file { "/var/www":
+    ensure  => 'directory',
+    group => 'aegir',
+    mode => 'g+ws',
+    require => [
+      Group["$aegir_user"],
     ]
   }
 
