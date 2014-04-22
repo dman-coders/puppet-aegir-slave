@@ -153,9 +153,12 @@ http://www.jeffmould.com/2013/10/06/upgrading-from-php-5-3-to-5-x-on-ubuntu-12-0
 Though that requres you to know the obscure version number also :
 "5.5.11-2+deb.sury.org~precise+2"
 
+### Specific versions
+
 But what about older versions?
 
 And what about downgrading (and holding/pinning)?
+
 The terminology is now 'hold' as 'pin' is mutable and only hints at the version
 we want but does not enforce it of some other thing wants to pull the old
 version up..
@@ -178,3 +181,157 @@ By adding
 We get access to 5.3.10-1ubuntu3
 Then we need to specify the version and also 'hold' the version
 - for all php-related mods.
+
+
+### Clean-slate to begin
+
+If they have already been installed :
+
+Find them all
+    dpkg --get-selections | grep php
+    dpkg -l | grep php
+kill them all
+    apt-get purge php5 php5-common php5-gd php5-mysql php5-cgi php5-cli php-pear php5-curl php5-json php5-readline libapache2-mod-php5
+
+
+But on a new box, that's no big deal.
+Instead, use the puppet-apt tool and hold them.
+This works by giving a higher priority to the older archive version..
+though it does not prevent accidental upgrades.
+
+### Madness with circular loops
+
+It turns out that specifying a perferred version for one part of php, but not
+for others (like php5-gd) craps out, OR forcibly upgrades the thing you were
+trying to keep back OR produces some combination of the two.
+We need to hold them all at the same time, and this is possible byu putting all
+versions and numbers on the same line using apt-get, but NOT when using puppet
+as it installs each package one by one, in no special order.
+
+To get this all installed at all, we need to 'pin' and define our preferred
+install versions.
+
+### Diagnostics
+
+To find what version is installed,
+
+    dpkg -l | grep php
+
+To add pins, use the puppet-apt utility apt::hold in the manifest
+
+    apt::hold { $packages:
+      # Here it requires the partial version number.
+      version => '5.7.10*',
+    }
+
+Which produces configs ('pins') in /etc/apt/preferences.d like so:
+
+    Explanation: apt: hold php5 at 5.7.10*
+    Package: php5
+    Pin: version 5.7.10*
+    Pin-Priority: 1001
+
+To find what priorities the competing versions have
+
+    apt-cache policy php5-cgi
+
+However the output from that is deceptive. Explained a little better here.
+http://carlo17.home.xs4all.nl/howto/debian.html#errata
+
+    php5-cgi:
+      Installed: (none)
+      Candidate: 5.3.10-1ubuntu3
+      Package pin: 5.3.10-1ubuntu3
+      Version table:
+         5.5.9+dfsg-1ubuntu4 1000
+            500 http://mirrors.digitalocean.com/ubuntu/ trusty/main amd64 Packages
+         5.3.10-1ubuntu3 1000
+            500 http://bg.archive.ubuntu.com/ubuntu/ precise/main amd64 Packages
+
+The 1000 there is only a value to match against, not the value found.
+We specified that
+"A version 5.3.10 is worth 1000 points, now search for anything that meets or beats that value"
+And that has been correctly identified as the "candidate",
+no matter what the weightings on the repository lists are
+(500 and 500 respectively, as both candidates are from stable milestone repos).
+
+### Gotchas
+
+* The gotcha that killed me was that the 'version' in a 'pin'
+  is not the full version string we use elsewhere, like in apt-get.
+  NOT:     5.3.10-1ubuntu3
+  INSTEAD: 5.3.10*
+  This lost me the whole day.
+
+* Actually, what lost me the rest of the day was that apt::hold creates
+  conf files with spaces in, and SPACES DO NOT WORK.
+
+* If you specify a version that is not available from the current repos,
+  it ignores you and takes a guess as if you said nothing.
+  Gee thanks.
+
+* If you then install something that is not pinned, and the latest version of
+  that expects the latest version of the rest, the rest will be instantly
+  upgraded to meet the newbies expectations.
+  Instant death, why did we bother.
+  Need to also 'hold' it to prevent this from happening.
+
+
+### Really 'holding' a version
+
+Doing something innocuous manually now, like
+
+    apt-get install php5-ldap
+
+Can destroy all our fun. It will pull everything along to the latest.
+
+apt::hold (right now) does NOT actually 'hold' (and lock) it.
+Some excuses for this are in the docs, but the promised solution does not deliver.
+https://github.com/puppetlabs/puppetlabs-apt
+The concept it refers to as
+"causes a version to be installed even if this constitutes a downgrade of the package"
+http://www.howtoforge.com/a-short-introduction-to-apt-pinning
+does NOT prevent later dependencies from upgrading the parent.
+
+To do that,
+
+    apt-mark hold php5-common
+
+So now, an inadvertant and presumed safe action like:
+
+    apt-get install php5-ldap
+
+Will NOT kill everything, it will just make you figure out that life is terrible
+and you need to go:
+
+    apt-get install php5-ldap=5.3.10-1ubuntu3
+
+Note that AFTER locking a package, apt-get will complain and die if you try a
+simple update that would break the lock. But if you use aptitude, it will
+problem-solve for you:
+
+    $ aptitude install php5-xsl
+    The following NEW packages will be installed:
+      libxslt1.1{a} php5-xsl{b}
+    0 packages upgraded, 2 newly installed, 0 to remove and 7 not upgraded.
+    Need to get 159 kB of archives. After unpacking 587 kB will be used.
+    The following packages have unmet dependencies:
+     php5-xsl : Depends: phpapi-20121212 which is a virtual package.
+                Depends: php5-common (= 5.5.9+dfsg-1ubuntu4) but 5.3.10-1ubuntu3 is installed and it is kept back.
+    The following actions will resolve these dependencies:
+
+         Keep the following packages at their current version:
+    1)     php5-xsl [Not Installed]
+
+    Accept this solution? [Y/n/q/?] n
+
+
+    The following actions will resolve these dependencies:
+
+         Install the following packages:
+    1)     php5-xsl [5.3.10-1ubuntu3 (precise)]
+
+
+    Accept this solution? [Y/n/q/?]
+
+Yep, that is the solution.
