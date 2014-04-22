@@ -6,22 +6,38 @@ class php {
   import "apt-setup"
 
   notice(" - Checking PHP extensions")
-  package { [
+  $packages = [
       "php5",
+      "php5-common",
       "php5-cli",
-      "php5-curl",
+      #"php5-curl",
       "php5-gd",
       "php5-mysql",
       "php-pear",
-    ]:
-    ensure => present,
-    require => Exec["apt-get update"],
+    ]
+
+  # For old PHP, and to pin it there, we need an older repo.
+  apt::source { 'precise_archive':
+    location          => 'http://bg.archive.ubuntu.com/ubuntu/',
+    release           => 'precise',
+    repos             => 'main',
+    include_src       => false,
+  }
+
+  apt::hold { $packages:
+    version => '5.3.10-1ubuntu3',
+    require => Apt::Source['precise_archive'],
+  }
+
+  package { $packages:
+    ensure => '5.3.10-1ubuntu3',
+    require => [ Apt::Hold[$packages] ],
   }
 
   notice(" - Checking PHP settings")
   # Use augeas for ini file managment. MUST have a new version of Puppet though!
   augeas { "Set PHP settings" :
-    context => "/files/etc/php5/fpm/php.ini/PHP",
+    context => "/files/etc/php5/apache2/php.ini/PHP",
     changes => [
       "set upload_max_filesize 16M",
       "set post_max_size 16M",
