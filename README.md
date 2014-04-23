@@ -346,3 +346,45 @@ But if you use aptitude, it will problem-solve for you:
     Accept this solution? [Y/n/q/?]
 
 Yep, that is the solution.
+
+### Alternate approaches
+
+The above mess-around gets PHP 5.3 onto a newer system ... but not yet working
+under Apache. To plug in and actually work on a webserver, we would enable
+mod_php, (libapache2-mod-php5).
+HOWEVER, it turns out that that bridge module only exists in binaries that
+bid together similar versions of releases. In short, you can't use
+an old libapache2-mod-php5 with new Apache, and you can't use a new
+libapache2-mod-php5 with old PHP. Not without rebuilding from source.
+
+#### Downgrade Apache to the old matching mod-php version
+
+The most straightforward way here is to give up and downgrade Apache also!
+This is in manifests/amp-precise.pp
+
+#### Decouple Apache and use php-cgi
+
+Though no longer popular, the solution may be to run php stand-alone.
+
+    apt-get install -t precise php5-cgi
+    a2enmod actions
+    sudo a2dismod php5
+
+then create a file
+
+    # /etc/apache2/conf.d/php5-cgi.conf (precise)
+    # /etc/apache2/conf-enabled/php5-cgi.conf (trusty)
+    # CUSTOM: Add PHP 5 parsing (via CGI) handler and action
+    ScriptAlias /bin /usr/bin
+    AddHandler application/x-httpd-php5 php
+    Action application/x-httpd-php5 /bin/php-cgi
+    <Directory "/usr/bin">
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+Restarting apache and visiting a phpinfo page should now NOT show the
+apache2handler chunk, and instead list *Server API : CGI/FastCGI*
+Hopefully the rest runs as expected.
+
+.. but yeah, that's so different from a desired environment that it's a bad idea.
