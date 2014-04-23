@@ -11,3 +11,28 @@ class { 'apt':
   #  proxy_port           => '3142',
 }
 
+# Make some old repos available
+apt::source { 'precise_archive':
+  location          => 'http://bg.archive.ubuntu.com/ubuntu/',
+  release           => 'precise',
+  repos             => 'main',
+  include_src       => false,
+}
+apt::source { 'raring_archive':
+  location          => 'http://bg.archive.ubuntu.com/ubuntu/',
+  release           => 'raring',
+  repos             => 'main',
+  include_src       => false,
+}
+# But ensure they are not 'preferred'
+apt::pin { 'precise':
+  priority => 401,
+  packages => '*',
+  require => [ Apt::Source['precise_archive'] ],
+}
+# But ensure they are not 'preferred'
+apt::pin { 'raring':
+  priority => 402,
+  packages => '*',
+  require => [ Apt::Source['raring_archive'] ],
+}
