@@ -18,12 +18,7 @@ class php {
   ]
 
   # For old PHP, and to pin it there, we need an older repo.
-  apt::source { 'precise_archive':
-    location          => 'http://bg.archive.ubuntu.com/ubuntu/',
-    release           => 'precise',
-    repos             => 'main',
-    include_src       => false,
-  }
+  # precise_archive is defined in apt-setup
 
   # apt::hold here really is just a heavy pin.
   # HOWEVER, it seems that that is not as strong as
