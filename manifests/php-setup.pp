@@ -1,10 +1,14 @@
 notice("We will want PHP")
 
-class php {
-  notice("Setting up PHP with preferred settings and extensions")
+class php (
+  $version = '5.3.10-1ubuntu3',
+  # Can be '5.3.10*', but that raises chang notices each time if so.
+  $repo_name = 'precise_archive',
+  # 'precise_archive',
+  ) {
 
+  notice("Setting up PHP ${version} with preferred settings and extensions")
   import "apt-setup"
-
   notice(" - Checking PHP extensions")
   $packages = [
     "php5-common",
@@ -27,14 +31,13 @@ class php {
   # Using a heavy pin does not prevent any other upgrade from dragging this
   # version forward accidentally.
   apt::hold { $packages:
-    # Here it requires the partial version number.
-    version => '5.3.10*',
-    require => [ Apt::Source['precise_archive'] ],
+    version => $version,
+    require => [ Apt::Source[$repo_name] ],
   }
 
   package { $packages:
     # Here it requires the full version number.
-    ensure => '5.3.10-1ubuntu3',
+    ensure => $version,
     require => [ Apt::Hold[$packages] ],
   }
 
