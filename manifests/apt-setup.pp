@@ -26,7 +26,7 @@ define apt::repo_archive (
   }
   # But ensure they are not 'preferred'
   apt::pin { "${release}":
-    priority => 401,
+    priority => 400,
     packages => '*',
     require => [ Apt::Source["${release}-archive"] ],
   }
@@ -35,28 +35,3 @@ define apt::repo_archive (
 # Make some old repos available
 apt::repo_archive{'precise-archive': release => 'precise'}
 apt::repo_archive{'raring-archive': release => 'raring'}
-
-apt::source { 'precise_archive':
-  location          => 'http://bg.archive.ubuntu.com/ubuntu/',
-  release           => 'precise',
-  repos             => 'main',
-  include_src       => false,
-}
-apt::source { 'raring_archive':
-  location          => 'http://bg.archive.ubuntu.com/ubuntu/',
-  release           => 'raring',
-  repos             => 'main',
-  include_src       => false,
-}
-# But ensure they are not 'preferred'
-apt::pin { 'precise':
-  priority => 401,
-  packages => '*',
-  require => [ Apt::Source['precise_archive'] ],
-}
-# But ensure they are not 'preferred'
-apt::pin { 'raring':
-  priority => 402,
-  packages => '*',
-  require => [ Apt::Source['raring_archive'] ],
-}
