@@ -388,3 +388,22 @@ apache2handler chunk, and instead list *Server API : CGI/FastCGI*
 Hopefully the rest runs as expected.
 
 .. but yeah, that's so different from a desired environment that it's a bad idea.
+
+## Status
+
+Once I was done (I actually switched to a later repo)
+the versions I found myself with (held back) were:
+
+    root@coders:~# dpkg -l | grep php
+    ii  libapache2-mod-php5                 5.4.9-4ubuntu2.4
+    ii  php-pear                            5.4.9-4ubuntu2.4
+    ii  php5-cli                            5.4.9-4ubuntu2.4
+    ii  php5-common                         5.4.9-4ubuntu2.4
+    ii  php5-gd                             5.4.9-4ubuntu2.4
+    ii  php5-mysql                          5.4.9-4ubuntu2.4
+    root@coders:~# dpkg -l | grep apache
+    ii  apache2-mpm-prefork                 2.2.22-6ubuntu5.1
+    ii  apache2-utils                       2.2.22-6ubuntu5.1
+    ii  apache2.2-bin                       2.2.22-6ubuntu5.1
+    ii  apache2.2-common                    2.2.22-6ubuntu5.1
+    ii  libapache2-mod-php5                 5.4.9-4ubuntu2.4
