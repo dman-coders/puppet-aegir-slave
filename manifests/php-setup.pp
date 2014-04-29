@@ -12,6 +12,8 @@ class php (
   notice("Setting up PHP ${version} ${repo_name} with preferred settings and extensions")
   import "apt-setup"
   notice(" - Checking PHP extensions")
+  # THIS LIST CHANGES between dist releases.
+  # For 'raring' Apache 2.2.22-6ubuntu5  PHP 5.4.9-4ubuntu2
   $packages = [
     "php5-common",
     "php5-cli",
@@ -20,8 +22,9 @@ class php (
     "php5-curl",
     "php5-gd",
     "php5-mysql",
-    #"php-pear",
-    #"apache2-mpm-prefork"
+    "php-pear",
+    #"apache2-mpm-prefork" # something from Precise
+    "libapache2-mod-php5"
   ]
 
 
@@ -31,7 +34,7 @@ class php (
     release => 'raring',
     priority => 700,
     # For mod_php to work, pin apache also.
-    packages => 'php5* libapache2-mod-php5 apache*',
+    packages => 'php* libapache2-mod-php5 apache*',
     require => [ Apt::Source['raring_archive'] ],
   }
 
