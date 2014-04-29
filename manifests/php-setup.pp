@@ -11,11 +11,8 @@ class php (
   #$release = 'precise',
   $release = 'raring',
   ) {
-
   notice("Setting up PHP ${version} ${release} with preferred settings and extensions")
 
-  import "apt-setup"
-  notice(" - Checking PHP extensions")
   # THIS LIST CHANGES between dist releases.
   # For 'raring' Apache 2.2.22-6ubuntu5  PHP 5.4.9-4ubuntu2
   $packages = [
@@ -34,6 +31,7 @@ class php (
 
   # For old PHP, and to pin it there, we need an older repo.
   # precise_archive and raring_archive is defined in apt-setup
+  import "apt-setup"
   apt::pin { "${release}-php5":
     release => $release,
     priority => 700,
@@ -48,16 +46,17 @@ class php (
   # which is the real way.
   # Using a heavy pin does not prevent any other upgrade from dragging this
   # version forward accidentally.
+
   #apt::hold { $packages:
   #  version => $version,
-  #  require => [ Apt::Source[$repo_name] ],
+  #  require => [ Apt::Source["${release}-archive"] ],
   #}
 
   package { $packages:
-    # Here it requires the full version number.
-    #ensure => $version,
+    # ensure => $version,
     # Ensure we are pinned to the preferred release before installing php packages.
-    #require => [ Apt::Hold[$packages] ],
+    # require => [ Apt::Hold[$packages] ],
+
     require => [Apt::Pin["${release}-php5"]],
   }
 
@@ -78,4 +77,3 @@ class php (
 
 # Now run it.
 include php
-

@@ -13,8 +13,13 @@ file { '/etc/motd':
   by dman 2014.
   "
 }
+file { "/etc/update-motd.d/20-about-puppet":
+  ensure  => file,
+  source => "${puppet_path}/files/etc/update-motd.d/20-about-puppet",
+  mode => '0755',
+}
 
-# If I don't have the pupptulabs libraries, pain.
+# If I don't have the puppetlabs libraries, pain.
 # to prevent "Invalid resource type module_dir"
 
 include "stdlib"

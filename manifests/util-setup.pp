@@ -13,6 +13,7 @@ class util-setup {
       "git",
       "unzip",
       "vim",
+      "tree",
     ]:
     ensure => present,
   }
