@@ -34,7 +34,7 @@ class php (
 
   # For old PHP, and to pin it there, we need an older repo.
   # precise_archive and raring_archive is defined in apt-setup
-  apt::pin { "${release-php5}":
+  apt::pin { "${release}-php5":
     release => $release,
     priority => 700,
     # For mod_php to work, pin apache also.

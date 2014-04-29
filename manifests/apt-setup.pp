@@ -11,7 +11,31 @@ class { 'apt':
   #  proxy_port           => '3142',
 }
 
+# Make old repos available, but not preferred.
+# Call this with the name of a release and it will become available.
+# To use it when installing a package, pin it.
+define apt::repo_archive (
+  $release    = 'precise'
+) {
+  # Add the repo path to apt sources.
+  apt::source { "${release}-archive":
+    location          => 'http://bg.archive.ubuntu.com/ubuntu/',
+    release           => $release,
+    repos             => 'main',
+    include_src       => false,
+  }
+  # But ensure they are not 'preferred'
+  apt::pin { "${release}":
+    priority => 401,
+    packages => '*',
+    require => [ Apt::Source["${release}-archive"] ],
+  }
+}
+
 # Make some old repos available
+apt::repo_archive{'precise-archive': release => 'precise'}
+apt::repo_archive{'raring-archive': release => 'raring'}
+
 apt::source { 'precise_archive':
   location          => 'http://bg.archive.ubuntu.com/ubuntu/',
   release           => 'precise',
