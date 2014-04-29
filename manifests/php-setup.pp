@@ -1,13 +1,15 @@
 notice("We will want PHP")
 
 class php (
-  $version = '5.3.10-1ubuntu3',
+  #$version = '5.3.10-1ubuntu3',
   # Can be '5.3.10*', but that raises chang notices each time if so.
-  $repo_name = 'precise_archive',
+  #$repo_name = 'precise_archive',
   # 'precise_archive',
+  $repo_name = 'raring_archive',
+
   ) {
 
-  notice("Setting up PHP ${version} with preferred settings and extensions")
+  notice("Setting up PHP ${version} ${repo_name} with preferred settings and extensions")
   import "apt-setup"
   notice(" - Checking PHP extensions")
   $packages = [
@@ -23,6 +25,12 @@ class php (
 
   # For old PHP, and to pin it there, we need an older repo.
   # precise_archive is defined in apt-setup
+  apt::pin { 'raring-php5': 
+    release => 'raring',
+    priority => 700, 
+    packages => 'apache2* php5* libapache2-mod-php5',
+    require => [ Apt::Source['raring_archive'] ],
+  }
 
   # apt::hold here really is just a heavy pin.
   # HOWEVER, it seems that that is not as strong as
@@ -30,15 +38,17 @@ class php (
   # which is the real way.
   # Using a heavy pin does not prevent any other upgrade from dragging this
   # version forward accidentally.
-  apt::hold { $packages:
-    version => $version,
-    require => [ Apt::Source[$repo_name] ],
-  }
+  #apt::hold { $packages:
+  #  version => $version,
+  #  require => [ Apt::Source[$repo_name] ],
+  #}
 
   package { $packages:
     # Here it requires the full version number.
-    ensure => $version,
-    require => [ Apt::Hold[$packages] ],
+    #ensure => $version,
+    # Ensure we are pinned to the preferred release before installing php packages.
+    #require => [ Apt::Hold[$packages] ],
+    require => [Apt::Pin['raring-php5']],
   }
 
   notice(" - Checking PHP settings")
