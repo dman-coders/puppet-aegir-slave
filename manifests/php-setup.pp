@@ -1,15 +1,19 @@
 notice("We will want PHP")
 
+# We lock the PHP to a previous release.
+# Originally I pinned the precise *version* orf each component
+# but then found I could use wildcards and distro releases
+# so now pinning php* to 'raring' release which provides a stable
+# php 5.4
+
 class php (
   #$version = '5.3.10-1ubuntu3',
-  # Can be '5.3.10*', but that raises chang notices each time if so.
-  #$repo_name = 'precise_archive',
-  # 'precise_archive',
-  $repo_name = 'raring_archive',
-
+  #$release = 'precise',
+  $release = 'raring',
   ) {
 
-  notice("Setting up PHP ${version} ${repo_name} with preferred settings and extensions")
+  notice("Setting up PHP ${version} ${release} with preferred settings and extensions")
+
   import "apt-setup"
   notice(" - Checking PHP extensions")
   # THIS LIST CHANGES between dist releases.
@@ -29,13 +33,13 @@ class php (
 
 
   # For old PHP, and to pin it there, we need an older repo.
-  # precise_archive is defined in apt-setup
-  apt::pin { 'raring-php5': 
-    release => 'raring',
+  # precise_archive and raring_archive is defined in apt-setup
+  apt::pin { "${release-php5}":
+    release => $release,
     priority => 700,
     # For mod_php to work, pin apache also.
     packages => 'php* libapache2-mod-php5 apache*',
-    require => [ Apt::Source['raring_archive'] ],
+    require => [ Apt::Source["${release}-archive"] ],
   }
 
   # apt::hold here really is just a heavy pin.
@@ -54,7 +58,7 @@ class php (
     #ensure => $version,
     # Ensure we are pinned to the preferred release before installing php packages.
     #require => [ Apt::Hold[$packages] ],
-    require => [Apt::Pin['raring-php5']],
+    require => [Apt::Pin["${release}-php5"]],
   }
 
   notice(" - Checking PHP settings")
