@@ -28,7 +28,8 @@ class php (
   apt::pin { 'raring-php5': 
     release => 'raring',
     priority => 700, 
-    packages => 'apache2* php5* libapache2-mod-php5',
+    # It looked like it was neccessary to pin apache with Precise, but not with raring.
+    packages => 'php5* libapache2-mod-php5 apache2.2-common',
     require => [ Apt::Source['raring_archive'] ],
   }
 
@@ -54,12 +55,14 @@ class php (
   notice(" - Checking PHP settings")
   # Use augeas for ini file managment. MUST have a new version of Puppet though!
   augeas { "Set PHP settings" :
-    context => "/files/etc/php5/apache2/php.ini/PHP",
+    #context => "/etc/php5/apache2/php.ini/PHP",
+    context => "/etc/php5/cgi/php.ini/PHP",
     changes => [
       "set upload_max_filesize 16M",
       "set post_max_size 16M",
       #"set PHP/display_errors On",
     ],
+    require => [Package['php5-cgi']],
   }
 
 }
