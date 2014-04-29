@@ -21,15 +21,17 @@ class php (
     "php5-gd",
     "php5-mysql",
     #"php-pear",
+    #"apache2-mpm-prefork"
   ]
+
 
   # For old PHP, and to pin it there, we need an older repo.
   # precise_archive is defined in apt-setup
   apt::pin { 'raring-php5': 
     release => 'raring',
-    priority => 700, 
-    # It looked like it was neccessary to pin apache with Precise, but not with raring.
-    packages => 'php5* libapache2-mod-php5 apache2.2-common',
+    priority => 700,
+    # For mod_php to work, pin apache also.
+    packages => 'php5* libapache2-mod-php5 apache*',
     require => [ Apt::Source['raring_archive'] ],
   }
 
