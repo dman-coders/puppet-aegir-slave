@@ -1,21 +1,17 @@
 
 class drupal-setup {
   notice("Setting up Requirements for Drupal (not Drupal itself though)")
-  /*
-  package {
-    'drupal-setup':
-      require => Class[
-        "apache",
-        "php",
-        "mysql::server"
-      ]
-  }
-  */
+
   import "apache-setup"
   import "php-setup"
   import "mysql-setup"
 
+  # To use the git version of drush, need to have git installed first.
+  # the drush class does not take care of that itself.
+  # We list git in the utils, so just make sure utils are available. 
+  Class['drupal-setup'] -> Class["util-setup"]
+  include drush::git::drush
 }
 
 include "drupal-setup"
-include drush::git::drush
+

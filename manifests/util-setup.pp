@@ -10,6 +10,7 @@ class util-setup {
       "sudo",
       "rsync",
       "git-core",
+      "git",
       "unzip",
       "vim",
     ]:
