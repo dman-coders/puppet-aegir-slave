@@ -1,24 +1,18 @@
 notice("We will want Apache with minimal additions.")
 
-# Using the module distributed by puppetlabs.
+# NOT Using the module distributed by puppetlabs.
 # https://github.com/puppetlabs/puppetlabs-apache#usage
+# because it doesn't do different versions very well.
+# It templated every config file - what is wrong with you??
 
-class { 'apache':
-  # If I wanted settings for apache, set them here.
-  #default_mods        => false,
-  #default_confd_files => false,
+class apache (
+) {
+  package { apache2:
+    ensure => present,
+  }
 }
-
-apache::mod { 'rewrite': }
-apache::mod { 'include': }
-#apache::mod { 'alias': }
-
-#apache::mod { 'php': }
-
-#apache::vhost { 'first.example.com':
-#  port    => '80',
-#  docroot => '/var/www/first',
-#}
+# Now run it.
+include apache
 
 
 # The default setup under Vagrant sets the apache server up with port forwarding
