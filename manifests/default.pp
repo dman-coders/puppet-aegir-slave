@@ -15,7 +15,8 @@ file { '/etc/motd':
 }
 file { "/etc/update-motd.d/20-about-puppet":
   ensure  => file,
-  source => "${puppet_path}/files/etc/update-motd.d/20-about-puppet",
+  # I can't get 'puppet:///files/' to resolve here. Not when running local at least. 
+  source => "/etc/puppet/files/etc/update-motd.d/20-about-puppet",
   mode => '0755',
 }
 
