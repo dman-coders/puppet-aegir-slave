@@ -34,7 +34,7 @@ class aegir-slave-setup (
     #system  => true, # correct, but gives you a shitty shell
     gid => $aegir_user,
     groups => [$web_group],
-    home => "/home/$name",
+    home => "/var/aegir",
     #membership => minimum,
     require => Group[$aegir_user],
   }
