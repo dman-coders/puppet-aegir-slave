@@ -4,8 +4,8 @@
 # just import or include the individual pps
 node default {
   # Use a local proxy with apt, and run update.
-  import "apt-setup"
-  import "util-setup"
-  import "aegir-slave-setup"
+  import 'apt-setup'
+  import 'util-setup'
+  import 'aegir-slave-setup'
 }
 

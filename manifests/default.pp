@@ -1,3 +1,4 @@
+#
 
 group { "puppet":
   ensure => "present",
@@ -6,17 +7,24 @@ group { "puppet":
 File { owner => 0, group => 0, mode => 0644 }
 
 # Global site additions :
+# I like putting lots of handy info into the login screen.
 
 file { '/etc/motd':
   content => "This box is managed by Puppet.
   Built as an Drupal Aegir Slave
-  by dman 2014.
+    by dman 2014.
   "
 }
-file { "/etc/update-motd.d/20-about-puppet":
+file { "/etc/update-motd.d/40-about-puppet":
   ensure  => file,
   # I can't get 'puppet:///files/' to resolve here. Not when running local at least. 
-  source => "/etc/puppet/files/etc/update-motd.d/20-about-puppet",
+  source => "/etc/puppet/files/etc/update-motd.d/40-about-puppet",
+  mode => '0755',
+}
+file { "/etc/update-motd.d/30-about-server":
+  ensure  => file,
+  # I can't get 'puppet:///files/' to resolve here. Not when running local at least.
+  source => "/etc/puppet/files/etc/update-motd.d/30-about-server",
   mode => '0755',
 }
 

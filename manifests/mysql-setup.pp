@@ -5,4 +5,5 @@ notice("We will want Mysql")
 class  { 'mysql::server':
   #override_options => { 'mysqld' => { 'max_connections' => '1024' } }
 }
-include "mysql::client"
+
+include 'mysql::client'

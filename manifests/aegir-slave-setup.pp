@@ -1,13 +1,12 @@
-notice("We want to up Aegir")
-
+# Define properties of the Aeiger user,
+# its rights, directory and requirememts.
+#
 # Aegir requires a drupal-compatible web server environment.
-
+#
 # Starting from http://community.aegirproject.org/node/30
 # http://community.aegirproject.org/node/396
 
-# This *declares* the class and its actions, not like other places
-# where we just declare that we want to use the class.
-
+# Define an aegir class, with a few potentially changeable options.
 class aegir-slave-setup (
   $puppet_path  = '/vagrant',
   $aegir_user   = 'aegir',
@@ -19,19 +18,19 @@ class aegir-slave-setup (
   notice("Setting up Aegir daemon account and access")
 
   require 'apt'
-  import 'drupal-setup'
+  # Loading drupal-setup will bring in the AMP stack.
+  import  'drupal-setup'
   require 'drupal-setup'
-
 
   # I suspect that transfers will be a bit easier if our gids are consistent.
   # Unknown though.
-  group {$aegir_user:
+  group { $aegir_user:
     ensure => present,
     gid => $aegir_gid,
   }
-  user {$aegir_user:
+  user { $aegir_user:
     ensure => present,
-    #system  => true, # correct, but gives you a shitty shell
+    #system  => true, # correct, but gives you a sh itty shell.
     gid => $aegir_user,
     groups => [$web_group],
     home => "/var/aegir",
@@ -77,7 +76,7 @@ class aegir-slave-setup (
     grant    => 'all',
   }
 
-  # Include the Aegir web confs
+  # Include the Aegir web confs. STUBS for now, but extendable.
   file { "${aegir_root}/config/apache.conf":
     ensure  => file,
     source => "${puppet_path}/files/var/aegir/config/apache.conf",
@@ -102,11 +101,6 @@ class aegir-slave-setup (
 
 
   # Aegir can restart apache
-  #file_line { 'Add sudo to aegur users':
-  #  ensure => 'present',
-  #  path => "/etc/sudoers",
-  #  line => 'aegir ALL=NOPASSWD: /usr/sbin/apache2ctl',
-  #}
   file { "/etc/sudoers.d/aegir":
     ensure  => file,
     source => "${puppet_path}/files/etc/sudoers.d/aegir",
@@ -115,8 +109,6 @@ class aegir-slave-setup (
 
 }
 
-#require aegir-slave-setup
-# or equivalently:
 class {'aegir-slave-setup':
   # I should be able to just use $confdir here. Why does that not work?
   puppet_path => "/etc/puppet",

@@ -1,4 +1,4 @@
-notice("We will want PHP")
+# Set up PHP 5.4 using raring distro.
 
 # We lock the PHP to a previous release.
 # Originally I pinned the precise *version* orf each component
