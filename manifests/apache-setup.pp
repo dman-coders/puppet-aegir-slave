@@ -10,8 +10,9 @@ class apache (
   package { apache2:
     ensure => present,
   }
-  # enable mod_rewrite
+  # Enable basic modules that matter.
   apache::loadmodule{ 'rewrite': }
+  apache::loadmodule{ 'expires': }
 }
 
 # http://snowulf.com/2012/04/05/puppet-quick-tip-enabling-an-apache-module/
