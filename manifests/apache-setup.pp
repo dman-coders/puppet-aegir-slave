@@ -13,6 +13,12 @@ class apache (
   # Enable basic modules that matter.
   apache::loadmodule{ 'rewrite': }
   apache::loadmodule{ 'expires': }
+
+  service { apache2:
+    ensure => true,
+    enable => true,
+    require => [ Package["apache2"] ],
+  }
 }
 
 # http://snowulf.com/2012/04/05/puppet-quick-tip-enabling-an-apache-module/
