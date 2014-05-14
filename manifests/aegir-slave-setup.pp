@@ -75,19 +75,18 @@ class aegir-slave-setup (
     host     => '%',
     grant    => 'all',
   }
-  mysql_grant { 'aegir@%/*.*':
+  mysql_grant { "${aegir_user}@%/*.*":
     ensure     => 'present',
     options    => ['GRANT'],
     privileges => ['ALL'],
     table      => '*.*',
-    user       => 'aegir@%',
-    password => $aegir_user,
+    user       => "${aegir_user}@%",
   }
   # We are already insecure, so lets not make things difficult for ourselves.
   file_line { "${aegir_root}/.my.cnf":
     ensure  => 'present',
     path    => "${aegir_root}/.my.cnf",
-    line    => "[client]\nuser = \"aegir\"\npassword = \"aegir\"",
+    line    => "[client]\nuser = \"${aegir_user}\"\npassword = \"${aegir_user}\"",
   }
 
   # Include the Aegir web confs. STUBS for now, but extendable.
