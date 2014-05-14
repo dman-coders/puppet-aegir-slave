@@ -1,0 +1,12 @@
+#!/bin/bash
+# Dump some info I probably want to know.
+# dman 2014-04 because I like more information and I can never remember where to find it.
+
+# Check if figlet exists, and use it to print ASCII hostname
+hash figlet 2>/dev/null && figlet -f big `hostname --short`
+
+# OS info
+lsb_release -a 2> /dev/null | egrep "Description|Codename"
+
+# AMP version info
+dpkg -s php5 apache2 mysql-server | egrep -h "Package|Version"
