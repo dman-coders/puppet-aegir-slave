@@ -28,6 +28,15 @@ file { "/etc/update-motd.d/30-about-server":
   mode => '0755',
 }
 
+# TODO set global umask to group share
+
+# TODO machine (eg digitalocean image) may not have swap. WTF?
+# was getting
+# Error: /Stage[main]/Mysql::Server::Service/Service[mysqld]: Could not evaluate: Cannot allocate memory - fork(2)
+# fixed by
+# https://www.digitalocean.com/community/articles/how-to-add-swap-on-ubuntu-12-04
+
+
 # If I don't have the puppetlabs libraries, pain.
 # to prevent "Invalid resource type module_dir"
 
