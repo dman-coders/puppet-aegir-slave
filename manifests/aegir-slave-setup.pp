@@ -19,7 +19,6 @@ class aegir-slave-setup (
 
   require 'apt'
   # Loading drupal-setup will bring in the AMP stack.
-  import  'drupal-setup'
   require 'drupal-setup'
 
   # I suspect that transfers will be a bit easier if our gids are consistent.

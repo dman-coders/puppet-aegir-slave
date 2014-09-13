@@ -3,9 +3,9 @@
 class drupal-setup {
   notice("Setting up Requirements for Drupal (not Drupal itself though)")
 
-  import 'apache-setup'
-  import 'mysql-setup'
-  import 'php-setup'
+  require 'apache-setup'
+  require 'mysql-setup'
+  require 'php-setup'
 
   # To use the git version of drush, need to have git installed first.
   # The drush class does not take care of that itself.

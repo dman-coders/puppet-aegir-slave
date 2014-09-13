@@ -43,7 +43,3 @@ file { "/etc/update-motd.d/30-about-server":
 include "stdlib"
 
 
-# Most of the individual setups are listed in 'nodes'
-
-import "nodes"
-
