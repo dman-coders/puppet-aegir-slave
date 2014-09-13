@@ -10,8 +10,13 @@ class drupal-setup {
   # To use the git version of drush, need to have git installed first.
   # The drush class does not take care of that itself.
   # We list git in the utils, so just make sure utils are available. 
-  Class['drupal-setup'] -> Package['git']
-  include drush::git::drush
+  #Class['drupal-setup'] -> Package['git']
+  #include drush::git::drush
+
+  # Alternativly, just fetch stable.
+  class {'drush':
+    ensure => latest,
+  }
 }
 
 include 'drupal-setup'
