@@ -17,7 +17,6 @@ class aegir-slave-setup (
 
   notice("Setting up Aegir daemon account and access")
 
-  require 'apt'
   # Loading drupal-setup will bring in the AMP stack.
   require 'drupal-setup'
 
