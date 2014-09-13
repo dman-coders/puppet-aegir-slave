@@ -6,11 +6,11 @@
 #
 # A sample Vagrantfile.local.dist.rb lists the expected settings.
 #
-File.exist?('./Vagrantfile.local') do
+if File.exist?('./Vagrantfile.local.rb')
  require './Vagrantfile.local'
+ puts "Loaded local"
  include AWS_vars
 end
-
 
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
@@ -27,6 +27,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # VirtualBox local
   # ================
   config.vm.provider "virtualbox" do |vb|0
+    # Where to get this from is autodetected from vagrant repos.
+    config.vm.box = "hashicorp/precise64"
     # Don't boot with headless mode
     # vb.gui = true
     vb.customize ["modifyvm", :id, "--cpus", "2"]
