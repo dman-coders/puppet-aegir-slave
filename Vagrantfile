@@ -90,8 +90,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # =======================
   config.vm.provider :digital_ocean do |provider, override|
 
-    puts "Using DigitalOcean '" + $digitalocean_client_id + "' as host provider"
-
     # Following instructions from https://www.digitalocean.com/community/tutorials/how-to-use-digitalocean-as-your-provider-in-vagrant-on-an-ubuntu-12-10-vps
     # and https://github.com/smdahlen/vagrant-digitalocean#install (more up to date)
 
@@ -135,6 +133,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # puppet.manifest_file  = "default.pp"
     # When designing for puppetmaster, the base manifest may be site.pp
     # and many docs refer to that instead of 'default.
+
+    # Setting the manifest_file to a dir means load all pp in that dir
+    # That's apparently recommended over 'import' now.
+    puppet.manifests_path = "manifests"
 
     puppet.module_path = "modules"
 
