@@ -66,7 +66,6 @@ class aegir-slave-setup (
 
   # This user gets a login to manage the local databases.
   # https://forge.puppetlabs.com/puppetlabs/mysql
-  include "mysql::server"
   mysql::db { 'mysql': # this is expected to be a DB name.
     user     => $aegir_user,
     password => $aegir_user,

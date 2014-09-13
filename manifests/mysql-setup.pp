@@ -13,4 +13,5 @@ class  { 'mysql::server':
   }
 }
 
-include 'mysql::client'
+class { 'mysql::client':
+}
