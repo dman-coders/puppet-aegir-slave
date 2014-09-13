@@ -27,7 +27,7 @@ class php (
       "set upload_max_filesize 16M",
       "set post_max_size 16M"
     ],
-    require => [Package['php5-cgi']],
+    #require => [Package['php5-cgi']],
   }
 
 }
