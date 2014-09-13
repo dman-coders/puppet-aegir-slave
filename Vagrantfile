@@ -8,8 +8,9 @@
 #
 if File.exist?('./Vagrantfile.local.rb')
  require './Vagrantfile.local'
- puts "Loaded local"
+ puts "Loaded local API keys and settings"
  include AWS_vars
+ include DIGITALOCEAN_vars
 end
 
 VAGRANTFILE_API_VERSION = "2"
@@ -87,26 +88,34 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #
   # DigitalOcean
   # =======================
-  config.vm.provider :digital_ocean do |provider|
+  config.vm.provider :digital_ocean do |provider, override|
+
+    puts "Using DigitalOcean '" + $digitalocean_client_id + "' as host provider"
 
     # Following instructions from https://www.digitalocean.com/community/tutorials/how-to-use-digitalocean-as-your-provider-in-vagrant-on-an-ubuntu-12-10-vps
+    # and https://github.com/smdahlen/vagrant-digitalocean#install (more up to date)
+
     # The $digitalocean_ parameters are kept out of source control
     # and should be included by providing your own Vagrantfile.local.rb
     # @see Vagrantfile.local.dist.rb
 
     provider.client_id = $digitalocean_client_id
-    provider.api_key = $digitalocean_api_key
-    provider.image = "Ubuntu 12.10 x64"
-    provider.region = "New York 2"
+    ## provider.api_key = $digitalocean_api_key
+    ## note, 'api_key' is old syntax,
+    provider.token = $digitalocean_token
+    provider.image = "LAMP on Ubuntu 14.04"
+    provider.region = "sfo1"
 
     # Optional
-    provider.size = "1024MB"
+    provider.size = "512mb"
     provider.ssh_key_name = "vagrant"
 
     # This defines the stub box definition.
     config.vm.box                 = "digitalocean_dummy"
     config.vm.box_url             = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
 
+    # It appears this is required. Dunno why it did not just default.
+    override.ssh.private_key_path = "~/.ssh/id_rsa"
   end
 
 

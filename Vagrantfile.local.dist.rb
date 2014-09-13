@@ -46,6 +46,6 @@ module DIGITALOCEAN_vars
 
     # Parameters for digitalocean connections
     $digitalocean_client_id = "name_of_your_api_key"
-    $digitalocean_api_token = "c297a82clongtokenusedforauthenticatingagainstdigitaloceanapiabc1"
+    $digitalocean_token = "c297a82clongtokenusedforauthenticatingagainstdigitaloceanapiabc1"
 
 end
