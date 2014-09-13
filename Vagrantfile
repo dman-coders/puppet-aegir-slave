@@ -12,7 +12,6 @@ if File.exist?('./Vagrantfile.local.rb')
  include AWS_vars
 end
 
-# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
@@ -46,35 +45,75 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # =======================
   config.vm.provider "aws" do |aws, override|
 
+    # @see Vagrantfile.local.dist.rb
+
     # aws.access_key_id     = "SECRET"
     # aws.secret_access_key = "SECRETSECRETSECRET"
     # aws.keypair_name      = "SECRET"
 
-    aws.access_key_id     = $access_key_id
-    aws.secret_access_key = $secret_access_key
-    aws.keypair_name      = $keypair_name
+    aws.access_key_id     = $aws_access_key_id
+    aws.secret_access_key = $aws_secret_access_key
+    aws.keypair_name      = $aws_keypair_name
 
     # Following instructions at
     # https://help.ubuntu.com/community/EC2StartersGuide
     # From http://cloud-images.ubuntu.com/releases/precise/release/
     # I selected an ebs 64-bit instance of Ubuntu LTS 'Precise' available in ap-southeast-1 (t1-micro)
     # Another recommendation from the Amazon wizard was ubuntu-precise-12.04-amd64-server-20131003 (ami-b84e04ea)
-    aws.ami = $ami
-    aws.region = $region
 
-    # If I intend to ssh (or sql) in, I need a non-default security group
-    # The "default" one 'sg-2e25787c' has no ports open, so I can't even ssh in.
-    # This one is mine:
-    aws.security_groups           = $security_groups
+    # aws.ami = "ami-d44e1f86"
+    # aws.region = "ap-southeast-1"
 
+    aws.ami = $aws_ami
+    aws.region = $aws_region
+
+    # This one is mine. *you have the set this up yourself through aws*.
+    # aws.security_groups           = ["basic ports open"]
+
+    aws.security_groups           = $aws_security_groups
+
+    # AWS needed to use private_key_path
+    # because it expects a .pem, not a .id_rsa
     override.ssh.username         = $override_ssh_username
     override.ssh.private_key_path = $override_ssh_private_key_path
 
-    config.vm.box                 = "dummy"
+    # This defines the stub box definition.
+    config.vm.box                 = "aws_dummy"
     config.vm.box_url             = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
 
   end
 
+  # Alternatively, do provisioning on
+  #
+  # DigitalOcean
+  # =======================
+  config.vm.provider :digital_ocean do |provider|
+
+    # Following instructions from https://www.digitalocean.com/community/tutorials/how-to-use-digitalocean-as-your-provider-in-vagrant-on-an-ubuntu-12-10-vps
+    # The $digitalocean_ parameters are kept out of source control
+    # and should be included by providing your own Vagrantfile.local.rb
+    # @see Vagrantfile.local.dist.rb
+
+    provider.client_id = $digitalocean_client_id
+    provider.api_key = $digitalocean_api_key
+    provider.image = "Ubuntu 12.10 x64"
+    provider.region = "New York 2"
+
+    # Optional
+    provider.size = "1024MB"
+    provider.ssh_key_name = "vagrant"
+
+    # This defines the stub box definition.
+    config.vm.box                 = "digitalocean_dummy"
+    config.vm.box_url             = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
+
+  end
+
+
+  # Provision with
+  #
+  # Puppet
+  # =======================
   # Puppet versions are out of control and impossible to follow.
   # Attempt to use the latest from puppetlabs.
   config.vm.provision :shell, :path => "files/upgrade_puppet.sh"
