@@ -9,6 +9,8 @@ class { 'apt':
   # but they limit the ability to distribute the box.
   #  proxy_host           => '192.168.56.101',
   #  proxy_port           => '3142',
+  # this may add a line /etc/apt.conf.d/01proxy
+  #  Acquire::http::Proxy "http://192.168.56.101:3142";
 }
 
 # Make old repos available, but not preferred.
