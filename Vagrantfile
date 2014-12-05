@@ -20,7 +20,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Every Vagrant virtual environment requires a box to build off of.
   # The location of this one will be autodetected, served from a vagrant repo
   # and can be updated automatically.
-  config.vm.box = "hashicorp/precise64"
+  # config.vm.box = "hashicorp/precise64"
 
   # Different setups for different providers
 
@@ -45,6 +45,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Amazon Web Services EC2
   # =======================
   config.vm.provider "aws" do |aws, override|
+    # the variable named 'aws' represents the aws specific params,
+    # the variable named override represents broader params.
 
     # @see Vagrantfile.local.dist.rb
 
@@ -79,8 +81,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     override.ssh.private_key_path = $override_ssh_private_key_path
 
     # This defines the stub box definition.
-    config.vm.box                 = "aws_dummy"
-    config.vm.box_url             = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
+    override.vm.box                 = "aws_dummy"
+    override.vm.box_url             = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
 
   end
 
@@ -88,7 +90,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #
   # DigitalOcean
   # =======================
-  config.vm.provider :digital_ocean do |provider, override|
+  config.vm.provider "digital_ocean" do |provider, override|
+    # the variable named 'provider' represents the digitalocean specific params
 
     # Following instructions from https://www.digitalocean.com/community/tutorials/how-to-use-digitalocean-as-your-provider-in-vagrant-on-an-ubuntu-12-10-vps
     # and https://github.com/smdahlen/vagrant-digitalocean#install (more up to date)
@@ -109,8 +112,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     provider.ssh_key_name = "vagrant"
 
     # This defines the stub box definition.
-    config.vm.box                 = "digitalocean_dummy"
-    config.vm.box_url             = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
+    override.vm.box                 = "digitalocean_dummy"
+    override.vm.box_url             = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
 
     # It appears this is required. Dunno why it did not just default.
     override.ssh.private_key_path = "~/.ssh/id_rsa"
