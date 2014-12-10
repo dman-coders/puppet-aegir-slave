@@ -1,7 +1,3 @@
-# A ground-up build of a puppetized box to run aegir drupal sites.
-
-Built from scratch because all the examples I found had too much stuff that I didn't understand yet.
-
 ## Warning
 
 This probably won't work for anyone but me - it was built on a local Virtualbox
@@ -15,34 +11,6 @@ or even 'supported' methodology is.
 
 Seriously, do not expect this to work or to learn anything off it. It's only
 in git so I can experiment with puppetmaster provisioning etc.
-
-# Usage
-
-Run
-
-    vagrant up
-
-This will take a while to download the box the first time if you do not
-already have it.
-
-## ssh
-
-run
-
-    vagrant ssh
-
-to connect.
-
-To use another ssh client, the user:pass is vagrant:vagrant
-and more info about connecting (port 2222 and IP) may be seen by running
-
-     vagrant ssh-config
-
-## Website
-
-The website it sets up is accessible via port forwarding, so may be found at
-
-http://localhost:8080
 
 # Diagnostics etc.
 

@@ -23,15 +23,16 @@ class apache (
 
 # http://snowulf.com/2012/04/05/puppet-quick-tip-enabling-an-apache-module/
 define apache::loadmodule () {
+
   exec { "/usr/sbin/a2enmod $name" :
     unless => "/bin/readlink -e /etc/apache2/mods-enabled/${name}.load",
-    notify => Service[apache2]
+    notify => Service[apache2],
+    require => Package[apache2],
   }
 }
 
 # Now run it.
 include apache
-
 
 # The default setup under Vagrant sets the apache server up with port forwarding
 # such that the website is on http://localhost:8080

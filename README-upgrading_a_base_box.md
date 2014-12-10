@@ -33,16 +33,22 @@ So - use VirtualBox (not vagrant) to:
 * import that to create a clean VM.
 I found that the one I had was named
     box-upgrade_1345488293_1
-* start and log in to that machine.
+* start and log in to that machine. (user:pass vagrant:vagrant)
 * run
+
     apt-get update; apt-get dist-upgrade;
     apt-get autoclean; apt-get autoremove;
+
 (I actually did another step to use a LOCAL apt-cache, which saved half an hour here.)
 * now repackage that box as a replacement ovf for precise64
+
     vagrant package --base box-upgrade_1345488293 --output precise64-2014-09.ovf
+
 That takes the temp vm (which was built in "~/VirtualBox VM/box-upgrade_1345488293/"
 and creates a new ovf file (in cwd)
+
     vagrant box add precise64-2014-09 precise64-2014-09.ovf
+
 This *copies* the ovf file into a new cache location ~/.vagrant.d/boxes/
 and registers it, automatically adding some meta
 

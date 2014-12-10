@@ -3,9 +3,8 @@
 class drupal-setup {
   notice("Setting up Requirements for Drupal (not Drupal itself though)")
 
-  require 'apache'
-  #require 'mysql::server'
-  require 'php'
+  require "apache"
+  require "php"
 
   # To use the git version of drush, need to have git installed first.
   # The drush class does not take care of that itself.

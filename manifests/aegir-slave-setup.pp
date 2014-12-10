@@ -80,16 +80,17 @@ class aegir-slave-setup (
     user       => "${aegir_user}@%",
   }
   # We are already insecure, so lets not make things difficult for ourselves.
-  file_line { "${aegir_root}/.my.cnf":
-    ensure  => 'present',
-    path    => "${aegir_root}/.my.cnf",
-    line    => "[client]\nuser = \"${aegir_user}\"\npassword = \"${aegir_user}\"",
+  file { "${aegir_root}/.my.cnf":
+    ensure  => file,
+    content => "[client]\nuser = \"${aegir_user}\"\npassword = \"${aegir_user}\"",
+    mode => '0440',
+    require => User[$aegir_user],
   }
 
   # Include the Aegir web confs. STUBS for now, but extendable.
   file { "${aegir_root}/config/apache.conf":
     ensure  => file,
-    source => "${puppet_path}/files/var/aegir/config/apache.conf",
+    source => "file:///vagrant/files/var/aegir/config/apache.conf",
     require => File["${aegir_root}/config"],
   }
   file { '/etc/apache2/conf.d/aegir.conf':
@@ -113,7 +114,7 @@ class aegir-slave-setup (
   # Aegir can restart apache
   file { "/etc/sudoers.d/aegir":
     ensure  => file,
-    source => "${puppet_path}/files/etc/sudoers.d/aegir",
+    source => "file:///vagrant/files/etc/sudoers.d/aegir",
     mode => '0440',
   }
 
