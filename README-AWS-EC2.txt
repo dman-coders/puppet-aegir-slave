@@ -1,3 +1,12 @@
+To configure support for AWS
+
+* Copy Vagrantfile.local.dist.rb to Vagrantfile.local.rb
+* Edit it to include your AWS keys, region etc.
+* Different regions have different instances available, so you'll have to track
+  that down.
+* Create an AWS security group that lets you connect,
+  and put the name into your local settings.
+
 To start an instance on EC2
 
     vagrant up --provider=aws

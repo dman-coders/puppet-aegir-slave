@@ -1,12 +1,13 @@
 # Stuff I don't want in source control,
 # or should be customized by the user.
 #
-# Copy this file to rename it Vagrantfile.local.rb and then edit it.
+# COPY THIS FILE to rename it Vagrantfile.local.rb and then edit it!
 
-# If using AWS-EC2, it requires you to provide some codes.
-# Keys here are NOT valid at all, but included as approximations of what
-# the real things look like.
 module AWS_vars
+
+    # If using AWS-EC2, it requires you to provide some codes.
+    # Keys here are NOT valid at all, but included as approximations of what
+    # the real things look like.
 
     # Amazon credentials
     # ==================
@@ -36,7 +37,7 @@ module AWS_vars
 
     # If I intend to ssh (or sql) in, I need a non-default security group
     # The "default" one 'sg-2e25787c' has no ports open, so I can't even ssh in.
-    # You must set yor own one up, and name it here.
+    # You must set your own one up, and name it here.
     # This one is mine:
     $security_groups = ["basic ports open"]
     # You must create and configure your own one first in the AWS console, then
