@@ -48,7 +48,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # the variable named 'aws' represents the aws specific params,
     # the variable named override represents broader params.
 
-    # @see Vagrantfile.local.dist.rb
+    # @see Vagrantfile.local.dist.rb for settings examples exist.
+    # This example requires you to have the vagrant-aws plugin.
+    # https://github.com/mitchellh/vagrant-aws
+    # Developed using version 0.4.1
 
     # aws.access_key_id     = "SECRET"
     # aws.secret_access_key = "SECRETSECRETSECRET"
@@ -75,6 +78,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     aws.security_groups           = $aws_security_groups
 
+    aws.instance_type = "m1.small"
+    aws.tags = {"Provisioner" => "Vagrant built"}
+    # How to set a label?
+
+
     # AWS needed to use private_key_path
     # because it expects a .pem, not a .id_rsa
     override.ssh.username         = $override_ssh_username
@@ -83,6 +91,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # This defines the stub box definition.
     override.vm.box                 = "aws_dummy"
     override.vm.box_url             = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
+
 
   end
 

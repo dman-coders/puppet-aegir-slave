@@ -22,14 +22,25 @@ module AWS_vars
     # I selected an ebs 64-bit instance of Ubuntu LTS 'Precise' available in ap-southeast-1 (t1-micro)
     # ubuntu-saucy-13.10-amd64-server-20140226
     #
-    $ami = "ami-d44e1f86"
     $region = "ap-southeast-1"
+    $ami = "ami-d44e1f86"
+
+    # OTHER REGIONS HAVE OTHER AMIs so from
+    # http://cloud-images.ubuntu.com/locator/ec2/
+    # when using
+    # $region = "ap-southeast-2"
+    # I had to instead find
+    # $aws_ami = "ami-69e28d53"
+    # trusty 14.04 LTS amd64 ebs
+
 
     # If I intend to ssh (or sql) in, I need a non-default security group
     # The "default" one 'sg-2e25787c' has no ports open, so I can't even ssh in.
     # You must set yor own one up, and name it here.
     # This one is mine:
     $security_groups = ["basic ports open"]
+    # You must create and configure your own one first in the AWS console, then
+    # list it by name. Multiples are allowed.
 
     # Amazon will have given you a pem to use, and it installs that on the
     # box to let you connect to it. Where did you put that key?
