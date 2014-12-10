@@ -18,13 +18,13 @@ file { '/etc/motd':
 file { "/etc/update-motd.d/40-about-puppet":
   ensure  => file,
   # I can't get 'puppet:///files/' to resolve here. Not when running local at least. 
-  source => "/etc/puppet/files/etc/update-motd.d/40-about-puppet",
+  source => "/vagrant/files/etc/update-motd.d/40-about-puppet",
   mode => '0755',
 }
 file { "/etc/update-motd.d/30-about-server":
   ensure  => file,
   # I can't get 'puppet:///files/' to resolve here. Not when running local at least.
-  source => "/etc/puppet/files/etc/update-motd.d/30-about-server",
+  source => "/vagrant/files/etc/update-motd.d/30-about-server",
   mode => '0755',
 }
 

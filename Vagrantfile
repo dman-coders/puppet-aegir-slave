@@ -22,6 +22,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # and can be updated automatically.
   # config.vm.box = "hashicorp/precise64"
 
+  name = $name || "slave"
+
   # Different setups for different providers
 
   # VirtualBox local

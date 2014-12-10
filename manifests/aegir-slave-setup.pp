@@ -51,7 +51,7 @@ class aegir-slave-setup (
   }
   file { "${aegir_root}/.ssh/authorized_keys":
     ensure  => file,
-    source => "${puppet_path}/files/var/aegir/.ssh/id_rsa.pub",
+    source => "/vagrant/files/var/aegir/.ssh/id_rsa.pub",
     owner   => $aegir_user,
     group   => $aegir_user,
     require => User[$aegir_user],
