@@ -84,6 +84,8 @@ class aegir-slave-setup (
     ensure  => file,
     content => "[client]\nuser = \"${aegir_user}\"\npassword = \"${aegir_user}\"",
     mode => '0440',
+    owner   => $aegir_user,
+    group   => $aegir_user,
     require => User[$aegir_user],
   }
 
@@ -91,19 +93,24 @@ class aegir-slave-setup (
   file { "${aegir_root}/config/apache.conf":
     ensure  => file,
     source => "file:///vagrant/files/var/aegir/config/apache.conf",
-    require => File["${aegir_root}/config"],
+    owner   => $aegir_user,
+    group   => $aegir_user,
+    require => [
+      File["${aegir_root}/config"],
+    ]
   }
   file { '/etc/apache2/conf.d/aegir.conf':
     ensure => 'link',
     target => "${aegir_root}/config/apache.conf",
     require => [
       File["${aegir_root}/config"],
+      User[$aegir_user]
     ]
   }
   # Aegir owns the web stuff.
   file { "/var/www":
     ensure  => 'directory',
-    group => 'aegir',
+    group => $aegir_user,
     mode => 'g+ws',
     require => [
       Group["$aegir_user"],
