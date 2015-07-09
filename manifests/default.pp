@@ -34,11 +34,12 @@ file { "/etc/apt/detect-http-proxy":
   source => "file:///vagrant/files/etc/apt/detect-http-proxy",
   mode => '0755',
 }
-file { "/etc/apt/apt.conf.d/30proxy":
-  ensure  => file,
-  source => "file:///vagrant/files/etc/apt/apt.conf.d/30detectproxy",
-  mode => '0755',
-}
+# Enable this to USE it. Disabled for distribution.
+#file { "/etc/apt/apt.conf.d/30proxy":
+#  ensure  => file,
+#  source => "file:///vagrant/files/etc/apt/apt.conf.d/30detectproxy",
+#  mode => '0755',
+#}
 
 
 # TODO set global umask to group share

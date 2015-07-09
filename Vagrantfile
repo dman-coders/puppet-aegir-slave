@@ -38,7 +38,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     # Set the apt-cacher. This is a per-environment setting.
     # not part of the box rules really.
-    config.vm.provision :shell, :inline => "echo 'Acquire::http::Proxy \"http://192.168.56.101:3142\";' >  /etc/apt/apt.conf.d/proxy "
+    # config.vm.provision :shell, :inline => "echo 'Acquire::http::Proxy \"http://192.168.56.101:3142\";' >  /etc/apt/apt.conf.d/proxy "
 
   end
 
