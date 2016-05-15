@@ -11,9 +11,10 @@ module AWS_vars
 
     # Amazon credentials
     # ==================
-    $access_key_id = "00GGHE9435P9EZJYD6R2"
-    $secret_access_key = "GpB32Ee5esWdG0SSvugNsXhcX13qwd0bPHScMAe3"
-    $keypair_name = "johnsAWSkeys"
+    $aws_access_key_id = "00GGHE9435P9EZJYD6R2"
+    $aws_secret_access_key = "GpB32Ee5esWdG0SSvugNsXhcX13qwd0bPHScMAe3"
+    # aws_keypair_name should be already available on AWS, found under AWS>EC2>Key Pairs
+    $aws_keypair_name = "johnsAWSkeys"
 
     # The base box
     # ============
@@ -23,8 +24,8 @@ module AWS_vars
     # I selected an ebs 64-bit instance of Ubuntu LTS 'Precise' available in ap-southeast-1 (t1-micro)
     # ubuntu-saucy-13.10-amd64-server-20140226
     #
-    $region = "ap-southeast-1"
-    $ami = "ami-d44e1f86"
+    $aws_region = "ap-southeast-1"
+    $aws_ami = "ami-d44e1f86"
 
     # OTHER REGIONS HAVE OTHER AMIs so from
     # http://cloud-images.ubuntu.com/locator/ec2/
@@ -39,7 +40,7 @@ module AWS_vars
     # The "default" one 'sg-2e25787c' has no ports open, so I can't even ssh in.
     # You must set your own one up, and name it here.
     # This one is mine:
-    $security_groups = ["basic ports open"]
+    $aws_security_groups = ["basic ports open"]
     # You must create and configure your own one first in the AWS console, then
     # list it by name. Multiples are allowed.
 

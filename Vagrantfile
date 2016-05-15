@@ -80,7 +80,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     aws.security_groups           = $aws_security_groups
 
-    aws.instance_type = "m1.small"
+    aws.instance_type = "t2.micro"
     aws.tags = {"Provisioner" => "Vagrant built"}
     # How to set a label?
 
